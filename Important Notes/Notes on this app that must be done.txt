@@ -1,20 +1,29 @@
-We want to save our progress to source control or version control:
--Install Git
+WE WANT TO SAVE OUR PROGRESS TO VERSION CONTROL OR SOURCE CONTROL:
+-Install Github and git bash
 -Make sure you have a github account
 -Go to profile->Settings->Developer Settings->Personal access token->Tokens Classic->Generate new token->Generate new token (classic)->Give it a note or name->No expiration->Check all the boxes->Generate Token->Copy the token and save it somewhere and use the token for your password, because of pushing and comitting code to my github repo
 -This is mey generated token: Use the following token/password when comitting things to my personal github: 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
 -Go to the project and open up git bash or any terminal or my choice:
 -Type git status -> It will say "not a git repo"
--Now we initialize this project leve as a git repo: type "git init"
--Do git status or look at the changes on vs code, you'll see the changes
--Ill see that there are changes that we dont want to commit
+-Go to github and create a new repository
+-Follow all the steps to commit and push on github
 -Create a .gitignore file-> Watch a vido on youtube how to create on visual studio
 -Go back to see the changes, you'll see that the changes are less now
 -We also dont want the appsettings.json file to be included in the commits so right click and add to .gitignore file
--We are ready to commit and push to github repo. First in vs go to account settings on your profile pic.
--Then click on account settings, make sure you have github account under all accounts.
-- Do the commit and push in visual studio then and check github website to see if there are any changes reflecting there
--
+
+MAKE THE FRONTEND RUN ON HTTPS INSTEAD OF JUST SO IT AN BE THE SAME AS THE BACKEND RUNNING ON HTTPS
+-Go to the studentassets folder->generateTrustedSSL
+-Click on server and do all the steps.
+-Create a ssl folder in the client app
+-Copy the server and server.ky files and paste it in the ssl folder from the generateTrustedSSL folder
+-Go to angular.json file and under serve add the following object-> "options":{
+            "sslCert": "./ssl/server.crt",
+            "sslKey": "./ssl/server.key",
+            "ssl": true
+          },
+-Restart the application and rerun ng serve -o
+-Go to the lock next to the url and check the certicate
+
 
 
 

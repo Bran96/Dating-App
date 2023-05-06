@@ -1,0 +1,9 @@
+<h1>Brandon</h1>
+
+<ul *ngIf="users > 0;else noUsers">
+    <li *ngFor="let user of users">
+        {{user}}
+    </li>
+</ul>
+
+<ng-template #noUsers>No Users</ng-template>

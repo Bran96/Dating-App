@@ -1,0 +1,7 @@
+This project is using:
+Angular 14,
+Typescript,
+Bootstrap 5 install,
+angular bootstrap/ngx bootstrap install,
+font-awesome install,
+CSS
