@@ -24,6 +24,11 @@ MAKE THE FRONTEND RUN ON HTTPS INSTEAD OF JUST SO IT AN BE THE SAME AS THE BACKE
 -Restart the application and rerun ng serve -o
 -Go to the lock next to the url and check the certicate
 
+WHEN CREATING SERVICES IN THE API IT'S IMPORTANT TO CREATE INTERFACES AND IMPLEMENTATION/SERVICE CLASS AT THE SAME TIME AND DEFINE THEM ASS BUILDER.SERVICE.ADDSCOPE(...) in the program.cs class - Section 4 video 41.
+
+TO ENSURE THAT ONLY AUTHORISED USERS CAN ACCESS A SPECIFIC ENDPOINT:
+-Do it on top of the http request in a controllers method eg. [Authorize] and you can also add [AllowAnonymous], but not at the beginning of the controller
+
 
 
 
