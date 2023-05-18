@@ -1,9 +1,5 @@
-<h1>Brandon</h1>
+<app-nav></app-nav>
 
-<ul *ngIf="users.length > 0 ;else noUsers">
-    <li *ngFor="let user of users">
-        {{user.userName}}
-    </li>
-</ul>
-
-<ng-template #noUsers>No Users</ng-template>
+<div class="container" style="margin-top: 100px">
+    <app-home></app-home>
+</div>
