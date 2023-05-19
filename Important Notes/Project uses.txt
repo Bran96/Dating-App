@@ -5,3 +5,5 @@ Bootstrap 5 install,
 angular bootstrap/ngx bootstrap install,
 font-awesome install,
 CSS
+For popups on login or submit or error we useAngular Toastr
+Bootswatch - install the package for themes. Im Using Quartz. Add it right below the bootstrap theme in angular.json file
