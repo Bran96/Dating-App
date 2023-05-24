@@ -38,10 +38,12 @@ export class AccountService {
     )
   }
 
+  // This is for local Storage
   setCurrentUser(user: User) {
     this.currentUserSource.next(user);
   }
 
+  // This is for local Storage
   logout() {
     localStorage.removeItem('user');
     this.currentUserSource.next(null);

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using DatingAppApi.Extensions;
+using System.ComponentModel.DataAnnotations;
 
 namespace DatingAppApi.Entities
 {
@@ -6,7 +7,7 @@ namespace DatingAppApi.Entities
     {
         public int Id { get; set; }
         [Required]
-        public string UserName { get; set; } = string.Empty;
+        public string UserName { get; set; } = String.Empty;
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
     }

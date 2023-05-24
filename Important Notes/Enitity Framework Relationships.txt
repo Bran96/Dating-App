@@ -1,0 +1,2 @@
+-Theres a Relationship between AppUser and Photos. Each App User has MANY Photos
+Photots will be in its own seeperate table

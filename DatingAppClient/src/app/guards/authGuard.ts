@@ -3,6 +3,7 @@ import { AccountService } from "../Services/account.service";
 import { ToastrService } from "ngx-toastr";
 import { map } from "rxjs";
 
+// This is for login purposes 
 export const authGuard = () => {
     const accountService = inject(AccountService);
     const toastr = inject(ToastrService);

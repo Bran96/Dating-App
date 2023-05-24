@@ -1,3 +1,5 @@
+2023/05 Course Started
+
 WE WANT TO SAVE OUR PROGRESS TO VERSION CONTROL OR SOURCE CONTROL:
 -Install Github and git bash
 -Make sure you have a github account
@@ -26,6 +28,7 @@ MAKE THE FRONTEND RUN ON HTTPS INSTEAD OF JUST SO IT AN BE THE SAME AS THE BACKE
 
 WHEN CREATING SERVICES IN THE API IT'S IMPORTANT TO CREATE INTERFACES AND IMPLEMENTATION/SERVICE CLASS AT THE SAME TIME AND DEFINE THEM ASS BUILDER.SERVICE.ADDSCOPE(...) in the program.cs class - Section 4 video 41.
 
+SECTION 6 ROUTING IN ANGULAR:::::::
 TO ENSURE THAT ONLY AUTHORISED USERS CAN ACCESS A SPECIFIC ENDPOINT:
 -Do it on top of the http request in a controllers method eg. [Authorize] and you can also add [AllowAnonymous], but not at the beginning of the controller
 
@@ -37,6 +40,42 @@ IF WE WANT SOME OF THE LINKS TO BE PROTECTED THAT A NON LOGGED INUSER SHOULDNT A
 FOR ANY THIRD PARTIES IMPORTS IN ANGULAR APPLICATION
 -Use an extra module besides app.module.ts that is shared.module.ts
 -If we want the imports to work in the shared.module.ts we also need to export them, creating an export array the same as the imports array
+
+SECTION 7 ERROR HANDLING:::::::
+WHEN ADDING ERROR HANDLING IN YOUR APPLICATION, IT IS A MUST
+=BACKEND
+-Start with a BuggyController - Create all methods for different errors. Test them on postman or swagger if they do have the methods in the controller
+-With this controller we will get way too much information when an error occur, eg. lines of errors, but we are interested only in something short
+-When we're in development mode in the launchSettings.json file and this means we will see a lot of errors, but with production mode you wont be able to see much errors
+-To go back to the second step we are done with all the methods in the controller, but if we see an exception that might occur in our code we want to add a try catch block. Now adding a try and catch block to each method in the buggyController. Its better to handle exceptions at the highest level instead of writing try catch for each method in the BuggyController. So we're not taking that approach(try cartch), we leave the methods as is!
+-Now create our own middleware to handle exceptions in our application
+-Create new folder errors in the api folder
+-Create new class ApiException.cs inside the errors folder: This is gonna contain the response of what we are gonna be sending back to the client when we have an exception. Check the file for details.
+-Inside the api create a new folder called Middleware.
+-Another c# class called ExceptionMiddleware.cs inside the Middleware folder to handle exceptions in out application. Read the details of how things are done in the file
+-Now since we're done in ExceptionMiddleware.cs class and in order to use this middleware now we need to go back to our program.cs class
+-Exception handling has to go to the very top of the HTTP request pipeline in this program.cs file
+-Done. Run the application and test in swagger or postman
+=CLIENT
+-We gonna do something similar in the angular side, we gonna create a component that we going to use to test our different error responses we getting back from the server. Just to manage and handle errors on the client side
+-Create component errors/test-error and follow the details
+-Add that error component top the app-routing.module.ts file 
+-Add then to the nav so that it can be accessed
+-Create an interceptor called interceptors/error and follow the details in the file for the errors that we can get in the application in the client.
+-Add the interceptor in the providers array in app.module.ts
+- So we want to make use of validation errors in the client, but on the test 400 Validation Error button we get an error that contains 2 arrays and we need to make it one array with a few indexes.
+-So when it comes to validation errors, users are typically gonna fill out a form and we want to display on that form somewhere what they have done wrong when they completed a field incorrectly.
+-Go to the test-error component and test if I can run ngFor over that array of the errors and create a new array to have those errors
+-Create 2 new components in the errors folder that will navigate to another component when reaching error 404(not-found) and error 500(server-error)
+-Add the Handling Not found
+-Adding the server-error page
+
+
+
+IF WE SEE SOMETHING IN OUR CODE THAT CAN POTENTIALLY THROW AN EXCEPTION THEN USE A TRY CATCH!
+
+
+
 
 
 
