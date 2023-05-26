@@ -1,2 +1,3 @@
--Theres a Relationship between AppUser and Photos. Each App User has MANY Photos
-Photots will be in its own seeperate table
+-Theres a Relationship between AppUser and Photos. Each App User or User has MANY Photos.
+One To Many Relationship.
+Photots will be in its own seperate table.

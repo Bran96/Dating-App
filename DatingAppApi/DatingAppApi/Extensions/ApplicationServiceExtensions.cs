@@ -19,6 +19,8 @@ namespace DatingAppApi.Extensions
             // 1ST STEP ENABLING CORS FOR ANGULAR
             services.AddCors();
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             return services;
         }

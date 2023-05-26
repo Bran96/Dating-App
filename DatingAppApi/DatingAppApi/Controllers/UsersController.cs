@@ -1,37 +1,36 @@
-﻿using DatingAppApi.Data;
-using DatingAppApi.Entities;
+﻿using AutoMapper;
+using DatingAppApi.DTO_s;
+using DatingAppApi.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace DatingAppApi.Controllers
 {
-    [Authorize]
+    [Authorize] // We want everyone to be authenticated before they can access all these endpoints inside this controller
     public class UsersController : BaseApiController
     {
-        // Its better to use underscore '_' for private variables
-        private readonly DataContext _context;
-
-        public UsersController(DataContext context)
+        private readonly IUserRepository _userRepository;
+        private readonly IMapper _mapper;
+        public UsersController(IUserRepository userRepository, IMapper mapper)
         {
-            _context = context;
+            _userRepository = userRepository;
+            _mapper = mapper;
         }
 
-        [AllowAnonymous]
+        //[AllowAnonymous] // This will allow users that aren't logged in will be able to see all the users
         [HttpGet]
         // We want to get a list of users thats why we use "IEnumerable"
-        public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers() // We need to return the MemberDto inside the Angle brackets of ActionResult<>
         {
-            var users = await _context.Users.ToListAsync();
+            var users = await _userRepository.GetMembersAsync();
+
             return Ok(users);
         }
 
-        [HttpGet]
-        [Route("{id:int}")]
-        public async Task<ActionResult<AppUser>> GetUser([FromRoute] int id)
+        [HttpGet("{username}")]
+        public async Task<ActionResult<MemberDto>> GetUser(string username) // We need to return the MemberDto inside the Angle brackets of ActionResult<>
         {
-            // We can use Find -> It must be a PK then, or we can use FirstOrDefault -> that doesnt need to be a PK
-            var user = await _context.Users.FindAsync(id);
+            var user = await _userRepository.GetMemberAsync(username);
 
             if(user == null)
             {

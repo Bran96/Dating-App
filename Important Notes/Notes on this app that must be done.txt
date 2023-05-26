@@ -70,11 +70,48 @@ WHEN ADDING ERROR HANDLING IN YOUR APPLICATION, IT IS A MUST
 -Add the Handling Not found
 -Adding the server-error page
 
-
-
 IF WE SEE SOMETHING IN OUR CODE THAT CAN POTENTIALLY THROW AN EXCEPTION THEN USE A TRY CATCH!
 
+Section 8: Extending the API
+-Generating seed data: In order to populate the Database with data instead of making it time consuming use the "json generator" in the browser
+-Create a # class in the Data folder and call it Seed and follow the code in there.
+-In order to apply the seed data: Up till now we have been using the Package Manager console and ran migrations and update the database, but we can also do that in code and not only package manager console
+-A good place to do this i when the application starts up and this is in the Program.cs class which is the entry point of the applicataion
+-Start Coding the program.cs class and follow thhe seeding data part one video. The implementation for the migration on Seeding data must go after the MapControllers() and before the Run()
 
+CREATING A REPOSITORY PATTERN AND MOVING AWAY FROM DBCONTEXT
+-DbContext supports the following methods:
+	-Users.First()
+	-Users.FirstOrDefault()
+	-Users.SingleOrDefault()
+	-Users.Include(x=>x.Thing).FirstOrDefault
+	-+10000 other methods
+-Repository supports the following methods:
+	-GetUser()
+	-GetUsers()
+	-UpdateUser()
+	-SaveAll()
+-DataContext in the controller will make it more difficult to test the controllers, because we need an implementation of the DataContext class in order to test the controllers
+-The DataContext class is Big and Complex and we want to avoid having to have an implementation of the DataContext.
+-In order to implement the Repository pattern we need to have an Interface and an implementation for our new Repository
+-Creating interfaces will be in the Interface folder
+-Creating the Implementation class will be in the Data Folder
+-Now that Im done with the Interface and implementation class, I need to add this to the ApplicationServiceExtension class and add it as another service under the other services as AddScoped inside the static class.
+-Now Change the Users Controller accordingly to get rid of the DataContext implementation and implement the Interface and Implementation class
+-We are actually returning an AppUser and Poto, but we dont want to return all the properties, we just want to return a few properties from AppUser and Photo.
+-Theres a relationship between the AppUser and the Photo. One(AppUser) To Many(Photo) relationship. Since we dont want the entire AppUser model and Photo Model to be returned, we need to shape our data and in order to do this we need to consider Dto's.
+-So we will create 2 Dto's. One for the AppUser Model and one for the Photos Model
+-Creating a MemberDto and PhotoDto based on exactly what we want to return.
+-So now we need a way to tell our Api instead of returning from our UsersController what we get from the Repository, we need to map the properties from our AppUser into our MemberDto and for Photo into our PhotoDto.
+-Creating this code can be extremely tedious and we gonna take a look at a tool that can help us do that called AutoMapper
+-So we gonna use the AutoMapper tool to help us map from an Entity to a Dto and later on vice versa
+-Go to Nuget Package Manager and search for "AutoMapper" and install "AutoMapper.Extensions.Microsoft.DependencyInjection"
+-We gonna use that to inject AutoMapper into our controllers or Repositories as in when we need it.
+-After AutoMapper has been installed, Create a new folder called "Helpers"
+-Create a new c# class inside that folder an call it "AutoMapperProfiles" and that class derives from "Profile". Now follow the code.
+-Make sure to add the AutoMapperProfiles class to the ApplicationServiceExtension Class as another service
+-Once we're done with the AutoMapperProfiles Class we need to Inject this as another service into our controller as IMapper from AutoMapper. Do the necessary coding. 
+-We will also want to add another photoUrl to the MemberDto, but cant really Map to it, so what we need to do is configure the AutoMapper sectin 8: 96. Look at the notes on the code
 
 
 
