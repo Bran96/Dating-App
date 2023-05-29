@@ -113,6 +113,14 @@ CREATING A REPOSITORY PATTERN AND MOVING AWAY FROM DBCONTEXT
 -Once we're done with the AutoMapperProfiles Class we need to Inject this as another service into our controller as IMapper from AutoMapper. Do the necessary coding. 
 -We will also want to add another photoUrl to the MemberDto, but cant really Map to it, so what we need to do is configure the AutoMapper sectin 8: 96. Look at the notes on the code
 
+SECTION 9:
+-Creating an interface in the frontend must be exactly the same as in the result we're getting in the backend in Postman or Swagger
+-Never have hardcoded urls in the services files.
+-Go to the environments folder and this is where we put in environment variables.
+-If we run ur application in production mode, we gonna use environment.prod.ts file and if we're not then we in environment.ts file(Its for Development). Put in the ApiUrl in this file
+
+
+
 
 
 
