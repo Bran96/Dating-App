@@ -11,7 +11,7 @@ namespace DatingAppApi.Entities
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
 
-        // We gerting the DOB, but Instead of showing the DateOfBirth we rather want to show the age of the user to the Client
+        // We getting the DOB, but Instead of showing the DateOfBirth we rather want to show the age of the user to the Client
         public DateTime DateOfBirth { get; set; } // DateOnly - allows us to only track the date of something
         public string KnownAs { get; set; } = String.Empty;
         public DateTime Created { get; set; } = DateTime.UtcNow; // Creating this property to keep track of when the user was created in our database and give an initial value of DateTime.UtcNow

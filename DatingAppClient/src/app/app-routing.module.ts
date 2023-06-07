@@ -9,9 +9,11 @@ import { authGuard } from './guards/authGuard';
 import { TestErrorComponent } from './errors/test-error/test-error.component';
 import { NotFoundComponent } from './errors/not-found/not-found.component';
 import { ServerErrorComponent } from './errors/server-error/server-error.component';
+import { MemberEditComponent } from './members/member-edit/member-edit.component';
+import { PreventUnsavedChangesGuard } from './guards/prevent-unsaved-changes.guard';
 
 const routes: Routes = [
-  // All the routes in the aapplication
+  // All the routes in the application
   {path: '', component: HomeComponent}, // Home Component will be a blank path since this is our first component showing up, eg. If we have an empty route its going to load the Home Component
   // This children array is just to say that instead of using one path at a time to add "canActivate: [AuthGuard]" to, we can add all of them together as AuthGuards instead.
   // This means that no one has access to those links if they are not logged into the system.
@@ -21,6 +23,7 @@ const routes: Routes = [
     children: [
       {path: 'members', component: MemberListComponent},
       {path: 'members/:username', component: MemberDetailComponent}, // So this :username represents a route parameter, eg. members/lisa
+      {path: 'member/edit', component: MemberEditComponent, canDeactivate: [PreventUnsavedChangesGuard]}, // An Individual Member can ediit their own profile
       {path: 'lists', component: ListsComponent},
       {path: 'messages', component: MessagesComponent},      
     ]},
