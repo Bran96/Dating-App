@@ -47,4 +47,12 @@ export class MembersService {
       })
     )
   }
+
+  setMainPhoto(photoId: number) {
+    return this.http.put(this.baseUrl + 'users/set-main-photo/' + photoId, {}) // We need to atleast add an object, but in this case its just the photo that we update so we add an empty object
+  }
+
+  deletePhoto(photoId: number) {
+    return this.http.delete(this.baseUrl + 'users/delete-photo/' + photoId);
+  }
 }

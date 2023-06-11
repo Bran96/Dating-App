@@ -132,6 +132,48 @@ prevent-unsaved-changes.guard.ts file in the Guards folder and specify th compon
 -"Using the Service to store state" / Update Member. Do exactly the same for updateMember()
 -So nothing will reload anymore because we have our members in memory base on all memebers, get member and update member
 
+SECTION 11: ADDING PHOTO UPLOAD FUNCTIONALITY
+//INTRODUCTION
+-Where do we store our photos, there are choices?
+	-Database as Binary Large Objects (Not efficient)
+	-File System on our server (Its fine)
+	-Cloud Service
+-The option we gonna be using for photo storage is a service called "Cloudinary".
+-Cloudinary provides a free tier, no credit card required and we get 10Gb storage for free and they provide a way for us to transform the "images uploaded" on that backend server that we dont need to take care of ourselves
+-Steps involved:
+-A client is gonna drag and drop an image in the angular application and only authenticated users can upload photos on the server
+-Step 1: Client uploads photo to API and using their JWT token to authenticate the server
+-Step 2: Securely upload the photo to cloudinary
+-Step 3: Cloudinary stores the photo and sends the response
+-Step 4: API saves photo URL and Public ID to DB
+-Step 5: Saved in DB and given auto generated ID
+-Step 6: 201 Response sent to client with location header
+-Now that the understanding is clear go to cloudinary.com and sign up for free.
+-Start with the Backend go to nuget package panager and search and install "CloudinaryDotNet"
+-Since that is done we need our configuratoin settings which is in the cloudinary.com dashboard page that refers to the "cloud name" and the "Api Key" and the "Api Secret" and we going to store that information inside our configuration so that we can pass it to the methods
+that we gonna use to upload the images
+-We do not want to store this information on github. So add appsettings.json file to gitIgnore.
+-Go to appsettings.json file and add the configuration there for "CloudinarySettings"
+-Add a new c# helper class, called "CloudinarySettings"
+-Then add this helper class to the ApplicationServiceExtensions class.
+-Create a PhotoInterface and photoService and make sure to understand the code written in those 2 files
+-Since we created an interface and a service we need to add this to our applicationServiceExtensions
+-Create a new method in the usersController so we can upload the photos and follow the code.
+-Also make sure to debug the code and login first before debugging the method
+-Create the photo-editor component and make it a child of the member-edit component
+-Once that is done then add a photo uploader in the photo-editor component. We ghonna be using a 3rd party package to help us to do this. And the one that is gonna be used is called the "Ng2 File Upload" - Valor Software. Follow all the steps on this link: https://valor-software.com/ng2-file-upload/
+-Remember to add FileUploaderModule to SharredModule in the project
+- Start coding in the photo-editor.component.ts and html file
+-133.Setting the main photo in the API and this means we gonna create another httpPut endpoint in the usersController
+-Test in postman now with lisa
+-134. Adding the main photo image to the navbar for the logged in user which is goonna be the user's main photo. Making changges in the account Controller and also add the photoUrl to the userdto
+-135. Setting the main photo in the client. Do this in the photoEditorComponent.ts and follow the code
+-136. Deleting the photo in the usersController and follow the code
+-137. Deleting the photo in the client and follow the code
+
+
+
+
 
 
 

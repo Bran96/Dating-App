@@ -1,0 +1,8 @@
+.nv-file-over {
+    border: dotted 3px red;
+}
+
+/*This will make the text "No file chosen" text next to the "Choose files button" to dissapear*/
+input[type=file] {
+    color: transparent;
+}

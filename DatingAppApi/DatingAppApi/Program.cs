@@ -29,7 +29,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 // 2ND STEP ENABLING CORS FOR ANGULAR 
-app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200"));
+app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("https://localhost:4200"));
 
 // Step 2: Authentication Middleware
 // We need these 2 when using JWT 

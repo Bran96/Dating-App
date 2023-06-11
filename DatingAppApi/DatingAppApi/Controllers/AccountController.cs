@@ -54,7 +54,8 @@ namespace DatingAppApi.Controllers
                 return new UserDto
                 {
                     Username = user.UserName,
-                    Token = _tokenService.CreateToken(user)
+                    Token = _tokenService.CreateToken(user),
+
                 };
             }
         }
@@ -64,7 +65,7 @@ namespace DatingAppApi.Controllers
         {
             // First we need to get the AppUser from the database because we want to login and check if the user can login with the credentials thats already stored in the database.
             // We can either use first or SingledefaultAsync
-            var user = await _context.Users.SingleOrDefaultAsync(x => x.UserName == loginDto.Username);
+            var user = await _context.Users.Include(p => p.Photos).SingleOrDefaultAsync(x => x.UserName == loginDto.Username);
 
             if(user == null)
             {
@@ -91,7 +92,8 @@ namespace DatingAppApi.Controllers
             return new UserDto
             {
                 Username = user.UserName,
-                Token = _tokenService.CreateToken(user)
+                Token = _tokenService.CreateToken(user),
+                PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain)?.Url // We just add optional chaining here incase the user doesnt have a main photo yet
             };
         }
 

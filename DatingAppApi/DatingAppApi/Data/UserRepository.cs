@@ -17,7 +17,6 @@ namespace DatingAppApi.Data
             _mapper = mapper;
         }
 
-        // Using
         public async Task<MemberDto> GetMemberAsync(string username) // Now we extending the UserRepo, just to return "some" of the fields of the table. And now we need to make use of AutoMapper for MemberDto to return some of the data
         {
             // This is gonna give us a single MemberDto according to specific username
@@ -25,7 +24,6 @@ namespace DatingAppApi.Data
             return await _context.Users.Where(x => x.UserName == username).ProjectTo<MemberDto>(_mapper.ConfigurationProvider).SingleOrDefaultAsync();
         }
 
-        // Using
         public async Task<IEnumerable<MemberDto>> GetMembersAsync() // Now we extending the UserRepo, just to return "some" of the fields of the table. And now we need to make use of AutoMapper for MemberDto to return some of the data
         {
             // This is gonna give us a list of MemberDto's
@@ -33,13 +31,11 @@ namespace DatingAppApi.Data
             return await _context.Users.ProjectTo<MemberDto>(_mapper.ConfigurationProvider).ToListAsync();
         }
 
-        // Not Using
         public async Task<AppUser> GetUserByIdAsync(int id)
         {
             return await _context.Users.FindAsync(id);
         }
 
-        // Not Using
         public async Task<AppUser> GetUserByUsernameAsync(string username)
         {
             // Can either use FirstOrDefaultAsync or SingleOrDefaultAsync
@@ -48,7 +44,6 @@ namespace DatingAppApi.Data
             return await _context.Users.Include(p => p.Photos).SingleOrDefaultAsync(x => x.UserName == username); // This is basically returning all the fields from the table
         }
 
-        // Not Using
         public async Task<IEnumerable<AppUser>> GetUsersAsync()
         {
             // In this method we need to use "Include" specifically to include the photos, but with ProjectTo in the GetMemberAsync method it handles everything already with regards to the relationship with Photo
