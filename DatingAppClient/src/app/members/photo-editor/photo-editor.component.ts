@@ -61,6 +61,12 @@ export class PhotoEditorComponent implements OnInit {
       if(response) {
         const photo = JSON.parse(response); // Now we gonna set our photo
         this.member?.photos.push(photo);// Now we gonna push our new photo that we getting from our API
+        // Once a new user is registered and the logged in user uploads a photo then it must update the nav photo as well as the photo when edit a profile(the big photo on the left)
+        if(photo.isMain && this.user && this.member) {
+          this.user.photoUrl = photo.url;
+          this.member.photoUrl = photo.url;
+          this.accountService.setCurrentUser(this.user);
+        }
       }
     }
   }

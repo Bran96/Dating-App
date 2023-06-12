@@ -171,6 +171,10 @@ that we gonna use to upload the images
 -136. Deleting the photo in the usersController and follow the code
 -137. Deleting the photo in the client and follow the code
 
+SECTION 12: REACTIVE FORMS
+-143. Validation Feedback: In the template [class.is-invalid] only show us whether the input is invalid or not
+147. Adding a date picker, we need to make use of ngx bootstrap.
+149. Client side registration: Once the user has successfully registered we gonna consider them logged in, so we'll take the opportunity to redirect them to the members page after they have successfully registered. In order to do that we need to inject Router into our register.component.ts file. We also need to consider changing the datepicker result as cleaner result of just day month ands year and not time included. Follow the code in the register.component.ts file
 
 
 

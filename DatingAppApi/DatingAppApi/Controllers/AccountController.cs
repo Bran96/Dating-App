@@ -1,4 +1,5 @@
-﻿using DatingAppApi.Data;
+﻿using AutoMapper;
+using DatingAppApi.Data;
 using DatingAppApi.DTO_s;
 using DatingAppApi.Entities;
 using DatingAppApi.Interfaces;
@@ -13,10 +14,12 @@ namespace DatingAppApi.Controllers
     {
         private readonly DataContext _context;
         private readonly ITokenService _tokenService;
-        public AccountController(DataContext dataContext, ITokenService tokenService)
+        private readonly IMapper _mapper;
+        public AccountController(DataContext dataContext, ITokenService tokenService, IMapper mapper)
         {
             _context = dataContext;
             _tokenService = tokenService;
+            _mapper = mapper;
         }
 
         // We are using a Post because we registering a user on the system / Adding a user on the system
@@ -26,38 +29,37 @@ namespace DatingAppApi.Controllers
         // - We are receiving the registerDto whhen the user register which is the username and the password only
         public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
         {
+            // Check if the usernname already exists
             if (await UserExists(registerDto.Username))
             {
                 return BadRequest("Username is taken");
             }
-            else
+
+            // Create the autoMapper to the AppUser from the registerDto. In other words we creating the user here with automapper since their properties are the same.
+            var user = _mapper.Map<AppUser>(registerDto);
+
+            // We need to hash the password that the user is entering when registering, by using the hashing algorithm,.Net Framework provide us with hashing algorithm
+            // The algorithm im using is called HMAC
+            // Once we are finished with this class "hmac" we want to dispose it. And if we want to let that happen automatically, we use using "using" in front
+            using var hmac = new HMACSHA512();
+
+            // So when we are finished with this class which is the using then the dispose method is gonna get called
+            // And now we gonna create a new user and specify the properties
+            user.UserName = registerDto.Username.ToLower();
+            user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password));
+            user.PasswordSalt = hmac.Key;
+
+            // This tracks the new entity in our memory, doesn't do anything to the database, but we're telling EF that we want to add our user
+            await _context.Users.AddAsync(user);
+            // Now we're saving it to the database
+            await _context.SaveChangesAsync();
+
+            return new UserDto
             {
-                // We need to hash the password that the user is entering when registering, by using the hashing algorithm,.Net Framework provide us with hashing algorithm
-                // The algorithm im using is called HMAC
-                // Once we are finished with this class "hmac" we want to dispose it. And if we want to let that happen automatically, we use using "using" in front
-                using var hmac = new HMACSHA512();
-
-                // So when we are finished with this class which is the using then the dispose method is gonna get called
-                // And now we gonna create a new user and specify the properties
-                var user = new AppUser
-                {
-                    UserName = registerDto.Username.ToLower(),
-                    PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),
-                    PasswordSalt = hmac.Key
-                };
-
-                // This tracks the new entity in our memory, doesn't do anything to the database, but we're telling EF that we want to add our user
-                await _context.Users.AddAsync(user);
-                // Now we're saving it to the database
-                await _context.SaveChangesAsync();
-
-                return new UserDto
-                {
-                    Username = user.UserName,
-                    Token = _tokenService.CreateToken(user),
-
-                };
-            }
+                Username = user.UserName,
+                Token = _tokenService.CreateToken(user),
+                KnownAs = user.KnownAs
+            };
         }
 
         [HttpPost("login")]
@@ -93,7 +95,8 @@ namespace DatingAppApi.Controllers
             {
                 Username = user.UserName,
                 Token = _tokenService.CreateToken(user),
-                PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain)?.Url // We just add optional chaining here incase the user doesnt have a main photo yet
+                PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain)?.Url, // We just add optional chaining here incase the user doesnt have a main photo yet
+                KnownAs = user.KnownAs,
             };
         }
 
