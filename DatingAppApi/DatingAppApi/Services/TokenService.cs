@@ -21,7 +21,9 @@ namespace DatingAppApi.Services
             // These are all claims who the user is / Information about the user
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.NameId, user.UserName),
+                new Claim(JwtRegisteredClaimNames.NameId, user.Id.ToString()), // This is to get the user by id
+                new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName) // This is toget the user by username
+
             };
 
             // Signing this Token with

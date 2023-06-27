@@ -1,5 +1,6 @@
 ﻿using DatingAppApi.DTO_s;
 using DatingAppApi.Entities;
+using DatingAppApi.Helpers;
 
 namespace DatingAppApi.Interfaces
 {
@@ -25,10 +26,12 @@ namespace DatingAppApi.Interfaces
         // Not using
         Task<AppUser> GetUserByUsernameAsync(string username);
 
-        // Using a MemberDto to get all Members instead of AppUser, because we dont want all the properties to be shown to the user.
+        // Using a MemberDto to get all Members instead of AppUser, because we dont want all the properties from the appUser to be shown to the user.
         // We can do this because we are making use of AutoMapper from the AppUser to the MemberDto
         // Using
-        Task<IEnumerable<MemberDto>> GetMembersAsync();
+        // This method is gonna be used for pagination, which means, we need to change the <IEnumerable> to "PagedList". We want a PagedList of Type MemberDto
+        // And we also going to pass in the UserParams userParams
+        Task<PagedList<MemberDto>> GetMembersAsync(UserParams userParams);
 
         // Using a MemberDto to get a single Member by username instead of AppUser, because we dont want all the properties to be shown to the user
         // We can do this because we are making use of AutoMapper from the AppUser to the MemberDto

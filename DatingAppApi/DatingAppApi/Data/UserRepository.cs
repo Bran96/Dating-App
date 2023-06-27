@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Azure;
 using DatingAppApi.DTO_s;
 using DatingAppApi.Entities;
+using DatingAppApi.Helpers;
 using DatingAppApi.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,11 +26,30 @@ namespace DatingAppApi.Data
             return await _context.Users.Where(x => x.UserName == username).ProjectTo<MemberDto>(_mapper.ConfigurationProvider).SingleOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<MemberDto>> GetMembersAsync() // Now we extending the UserRepo, just to return "some" of the fields of the table. And now we need to make use of AutoMapper for MemberDto to return some of the data
+        // The MemberDto is what we return in our result, basically what we're getting back
+        public async Task<PagedList<MemberDto>> GetMembersAsync(UserParams userParams) // Now we extending the UserRepo, just to return "some" of the fields of the table. And now we need to make use of AutoMapper for MemberDto to return some of the data
         {
-            // This is gonna give us a list of MemberDto's
-            // Instead of doing the Mapping in the controller, we rather doing it in the Repository
-            return await _context.Users.ProjectTo<MemberDto>(_mapper.ConfigurationProvider).ToListAsync();
+            var query = _context.Users.AsQueryable(); //AsQueryable allows you to perform more advanced querying operations using the LINQ query operators.
+
+            query = query.Where(u => u.UserName != userParams.CurrentUserName); // Get all the users except for the Current logged in user
+            query = query.Where(u => u.Gender == userParams.Gender); // Get all the users according to the gender selected
+
+            // Filtering according to date Range from Minimum age to maximum age
+            // Also keep in mind in our database we strore it as a dob value and it has a date property
+            // and in the userParams we store it as 2 properties of datatype "int", so we need to add logic to 2 variables
+            var minDob = DateTime.Today.AddYears(-userParams.MaxAge - 1);
+            var maxDob = DateTime.Today.AddYears(-userParams.MinAge);
+            query = query.Where(u => u.DateOfBirth >= minDob && u.DateOfBirth <= maxDob);
+
+            //This is for sorting the users or Order the users
+            query = userParams.OrderBy switch
+            {
+                "created" => query.OrderByDescending(u => u.Created),
+                _ => query.OrderByDescending(u => u.LastActive)// Specify just the default which is the "lastActive"
+            };
+
+            // This CreateAsync method is inside 
+            return await PagedList<MemberDto>.CreateAsync(query.AsNoTracking().ProjectTo<MemberDto>(_mapper.ConfigurationProvider), userParams.PageNumber, userParams.PageSize);
         }
 
         public async Task<AppUser> GetUserByIdAsync(int id)

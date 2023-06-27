@@ -2,6 +2,7 @@
 using DatingAppApi.DTO_s;
 using DatingAppApi.Entities;
 using DatingAppApi.Extensions;
+using DatingAppApi.Helpers;
 using DatingAppApi.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,9 +25,26 @@ namespace DatingAppApi.Controllers
         //[AllowAnonymous] // This will allow users that aren't logged in will be able to see all the users
         [HttpGet]
         // We want to get a list of users thats why we use "IEnumerable"
-        public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers() // We need to return the MemberDto inside the Angle brackets of ActionResult<>
+        // For the UserParams we passing tthrough, we gona ask the client to send this up as a query string and not just an object, by doing this we will be adding [FromQuery]
+        public async Task<ActionResult<PagedList<MemberDto>>> GetUsers([FromQuery]UserParams userParams) // We need to return the MemberDto inside the Angle brackets of ActionResult<>
         {
-            var users = await _userRepository.GetMembersAsync();
+            // This is for getting the current user thats logged in that we dont want to display in the members list when we click on "Matches"
+            var username = User.GetUsername();
+            var currentUser =  await _userRepository.GetUserByUsernameAsync(username);
+            userParams.CurrentUserName = currentUser.UserName;
+
+            // We want our users to select which gender they want to view, but if they do not make a selection or they just loaded the members page which is the matches tab
+            // then we going to send back a default instead
+            if(string.IsNullOrEmpty(userParams.Gender))
+            {
+                userParams.Gender = currentUser.Gender == "male" ? "female" : "male";
+            }
+
+            var users = await _userRepository.GetMembersAsync(userParams);
+
+            // We also want to return our Pagination information via the Pagination Header, so we gonna get access to our httpResponse which is called "Response" inside our ApiContoller
+            // and then add our "AddPaginationHeader" in the HttpExtensions Class
+            Response.AddPaginationHeader(new PaginationHeader(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages));
 
             return Ok(users);
         }

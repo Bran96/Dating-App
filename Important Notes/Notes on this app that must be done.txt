@@ -176,6 +176,79 @@ SECTION 12: REACTIVE FORMS
 147. Adding a date picker, we need to make use of ngx bootstrap.
 149. Client side registration: Once the user has successfully registered we gonna consider them logged in, so we'll take the opportunity to redirect them to the members page after they have successfully registered. In order to do that we need to inject Router into our register.component.ts file. We also need to consider changing the datepicker result as cleaner result of just day month ands year and not time included. Follow the code in the register.component.ts file
 
+SECTION 13: PAGING, SORTING AND FILTERING
+- We gonna implement paging, sorting and filtering in both the api and the client side
+- 152. Adding a paged list class.In the UserRepository for the GetMmbersAsync we would have to add .Take(4): This is the 1st step starting with Pagination, which means we're only taking 4 records from this method. Then after that we would have to use .Skip(4): 2nd step, if we were on the second page we would want to skip the first 4 members and that would effectively give us the next batch of 4 users. We dont want to do it like this in the respository, because then we have to do it for each and every method that needs pagination and we want something more reusable. In order to do this reusable:
+-153.Adding helper classes for pagination. We gonna create a new class or derive from this new class called "PagedList" inside our Helpers folder in the Api. Follow the code in this class
+-Once done. Then we gonna create another helper class called  PaginationHeader and its gonna be an object that we return inside the httpResponse Headers. So we gona have a header called Pagination and return this inside an http response.
+-And to make this easier to work with inside the http response, we will create an extension method thats gonna extend the http response object or class. Now inside the Extensions folder create another extensions class called "HttpExtensions" and follow the code in there.
+-Once done. In order for this pagination to work we need to take parameters from our client so it can ask us what page number their interested in and what page size it is. Create a new Helper class inside the Helpers folder and call it "UserParams" and follow the code.
+-154. Using the pagination classes. Once done, we gonna look on how to use all these pagination classes that we created. Make sure to bring in changes to the Interface and UserRepository for the GetMembersAsync Method as well as in the UsersController.
+-Test in Postman. Remember to log in first and then test the query without QS and then also test the pagination
+-Backend setup for Pagination: PagedList -> PaginationHeader -> HttpExtension -> UseParams -> IUserRepository -> UserRepository -> UsersController
+-155.Setting up client pagination. Create a new model called pagination.ts and follow the code
+-Head over to the membersService where we gonna use this. And we gonna focus on our getMembers method and follow the code 
+-In the get request inside the getMembers method we need to get access to the full http response, because that is where our pagination header is residing. In order to do this we must tell it what we want to observe. We want to observer the response and not just the body and we also want to pass up the params in there as well eg. {observe: 'response', params}
+-Make the neccessary changes in the member-list.component.ts file and in the member-list.component.html file.
+-Run Project and check the networks tab and look at the wquery string and take a look at the response headers
+-156.Using the angular bootstrap pagination component. Add the code to members-list component as well as the shared module
+-157.Adding filtering to the API. Issues we have we return the currently logged in user too in the members list. We want to exclude the logged in user.
+-We also going to return by default the opposite gender of the current logged in user.
+-We need to make changes to the useParams class to add the gender as well as the currenUserName.
+-Make changes to the GetUsers method in the UsersController and GetMembersAsync method in UserRepository. Go test it in Postman its supposed to work now
+-158.Adding additional filters. Allow the user to select an age range. Make changes to the UserParams file.
+-Make changes to the GetUsers method in the UsersController and GetMembersAsync method in UserRepository.
+-Check Postman on age Ranges. Filter is working on Age ranges.
+-Now we got our filters working in the Api. Lets head over to frontend
+159. Cleaning up the member service. We want to add the Gender property to the userDto and in the accountsController. This is all because of the filtering we have for gender
+-Also add the gender property to the frontend User.ts file.
+-We need to go to the memberService and send more parameters to the API
+-Create a UserParams.ts file in the frontend so that we can have all the properties in there instead of having all these properties as parameters in the getMembers() method and make it an object instead and follow the code implementation
+-160.Adding filter buttons to the client. Filter based on the age and the gender. Do this inside the member-list.component.ts as well as in the html file file. We need to create a dropdown for the gender and normal inputs for the age range. Have this as a template form
+-161.Adding sorting functionality. Allow the user to sort the users when last they were active or how long they have been a member. We'll start off in the api to implement this, inside the User Reposiitory in the GetMembersAsync() method
+-162.Adding an action filter. Action filter means we can do something with the request even before its executed by our endpoint or after. We want to update the lastActive property when loading all the members to see when the user last used the site.
+-Create a new class in the Helpers folder and call it LogUserActivity and follow all the code.
+-Once done. Test it on postman, log in as lisa and then get the username by lisa and check the lastActive property that is has been updated today
+-163. Making the last active action filter more optimal. Impplementing getting the user by Id instead of username. and add the id to the claimsprincipal too and so forth and make the necessary changes in repo and controller
+-164. Sorting on the client. We want to sort the members based on their recent activity or whether their a new member and in order to do this we going to get help from ngx bootstrap. We want radio buttons to choose latest active members or new recent members.Import the buttonsModule from angular bootstrap to the sharedModule and remeber to export it too.
+-In the userParams add the orderBy property and give it a default value of lastActive that we gonna order by.
+-Then go to the member-list.html file and add the 2 buttons that we want to order by, we will make use of 2 radio buttons, because we are ordering by lastActive or created.
+-Go to the members service file and add it to the params in the getMembers method
+-Once done, test on the website
+-165.Formatting dates.
+-So when going into the user's detail we have the following look: 
+Last Active:
+2023-06-25T11:11:52.5217973
+Member since:
+2020-06-24T00:00:00
+and we dont want these dates to look like this. we just have to add the pipe "date in the detail html file of the member.
+-We can also customize it for the created date like so: | date: "dd MMM yyyy".
+-For last Active we will use a package that will help us specify how long ago the member was active instead of specifying the date, so we want seconds, minutes, hours and days,weeks,months and years.
+-The package we will be using is called ngx-timeago.
+-For third party packages we need to install it using npm.
+-Then add it to sharedModule.
+-When we test on the website we will see that the last actiev hours is actually out, and we need to correct this because the browser using localtime and our server is returning the UTC date. Go to the networks tab and look at the 200 ok request and look at the lastActive property. We will see its still not right, so theres no way for our browser to know that we using utc or local time and because of this its gonna presume its local time.
+-Utc time has a z at the end. To solve this we must concatenate a 'Z' to the sttring interpolation when we use pipe timeAgo on the property in the member detail and edit html
+166.Restoring the caching for members. We want to add back our caching and getting our service to remember once again that we have data in the memory and remember the data in the memory and we disabled it while we were looking at pagination and filtering, but we need to enable it again
+-We need to store the query as a key and the result as a value since we're making use of Pagination and filtering and sorting and so forth.
+-Now try and get a key from the userParams.
+-Now we want to store the key and value pairs and we'll use a Javascript Object Map in the members service.ts file
+-167.Restoring caching for member detailed.
+-168. Remembering the filters for a user in the service.
+-The reason why we add this is because, If we take a look at our members list and go into a single member, that means the member list gets destroyed and that is where we store our
+userParams, which means we lost our previous query we had
+-So what we want is, If we click on one of the users and go back to the matches we would like to remember the previous query that I had and in order to do this we need to store the UeParams in the memberService, because if the component gets destroyed the service does not get destroyed. Look atv the code in the membersService.ts file in the constructor.
+-Then we want to create methods for getUserParams() and setUserParams()
+-Then we can use the getUserParams method inside our component which is the memberList.component.ts file
+-Inside the member-list component.ts remove where we setting our userParams in the constructor and also remove the injected UserParams, because our memberService is already taking care of this
+-So inside the member-list.component.ts file, call the userParams data inside the memberlist component to fetch the getUserParams method from the membersService file and then the userParams in the memberlist.component.ts file will be populated.
+-Then if we load the members in the memberList.component file we want to set the setUserParams method in the memberService file with the userParams in the loadMembers method inside the memberslist component
+
+
+
+
+
+
 
 
 
