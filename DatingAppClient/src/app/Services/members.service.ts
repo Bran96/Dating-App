@@ -108,6 +108,18 @@ export class MembersService {
     return this.http.delete(this.baseUrl + 'users/delete-photo/' + photoId);
   }
 
+  addLike(username: string) { // we're taking in the username that is gonna get liked
+    return this.http.post(this.baseUrl + 'likes/' + username, {}); // because its a post we gonna pass up an empty object
+  }
+
+  getLikes(predicate: string, pageNumber: number, pageSize: number) {
+    let params = this.getPaginationHeaders(pageNumber, pageSize);
+    params = params.append('predicate', predicate);
+
+    // return this.http.get<Member[]>(this.baseUrl + 'likes?predicate=' + predicate);
+    return this.getPaginatedResult<Member[]>(this.baseUrl + 'likes', params);
+  }
+
   // Private methods should always go underneath public methods
   private getPaginatedResult<T>(url: string, params: HttpParams) {
     const paginatedResult: PaginatedResult<T> = new PaginatedResult<T>;

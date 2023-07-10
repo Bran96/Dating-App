@@ -178,7 +178,7 @@ SECTION 12: REACTIVE FORMS
 
 SECTION 13: PAGING, SORTING AND FILTERING
 - We gonna implement paging, sorting and filtering in both the api and the client side
-- 152. Adding a paged list class.In the UserRepository for the GetMmbersAsync we would have to add .Take(4): This is the 1st step starting with Pagination, which means we're only taking 4 records from this method. Then after that we would have to use .Skip(4): 2nd step, if we were on the second page we would want to skip the first 4 members and that would effectively give us the next batch of 4 users. We dont want to do it like this in the respository, because then we have to do it for each and every method that needs pagination and we want something more reusable. In order to do this reusable:
+- 152. Adding a paged list class.In the UserRepository for the GetMebersAsync we would have to add .Take(4): This is the 1st step starting with Pagination, which means we're only taking 4 records from this method. Then after that we would have to use .Skip(4): 2nd step, if we were on the second page we would want to skip the first 4 members and that would effectively give us the next batch of 4 users. We dont want to do it like this in the respository, because then we have to do it for each and every method that needs pagination and we want something more reusable. In order to do this reusable:
 -153.Adding helper classes for pagination. We gonna create a new class or derive from this new class called "PagedList" inside our Helpers folder in the Api. Follow the code in this class
 -Once done. Then we gonna create another helper class called  PaginationHeader and its gonna be an object that we return inside the httpResponse Headers. So we gona have a header called Pagination and return this inside an http response.
 -And to make this easier to work with inside the http response, we will create an extension method thats gonna extend the http response object or class. Now inside the Extensions folder create another extensions class called "HttpExtensions" and follow the code in there.
@@ -242,19 +242,19 @@ userParams, which means we lost our previous query we had
 -Then we can use the getUserParams method inside our component which is the memberList.component.ts file
 -Inside the member-list component.ts remove where we setting our userParams in the constructor and also remove the injected UserParams, because our memberService is already taking care of this
 -So inside the member-list.component.ts file, call the userParams data inside the memberlist component to fetch the getUserParams method from the membersService file and then the userParams in the memberlist.component.ts file will be populated.
--Then if we load the members in the memberList.component file we want to set the setUserParams method in the memberService file with the userParams in the loadMembers method inside the memberslist component
+-Then if we load the members in the memberList.component file we want to set the setUserParams method in the memberService file with the userParams in the loadMembers method inside the memberslist component.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+SECTION 14. ADDING THE LIKE USER FEATURE
+-171. Adding a likes entity. This is a many to many relationship between the user signed in and the user displaying in the matches tab. eg. many to many between AppUser and AppUser and we will be using a fluentAPI, meaning a many to many relationship with the same entity
+-AppUser "has one" SourceUser "with many" likedUsers
+-AppUser "has one" LikedUser "with many" likedByUsers
+-Containing a List of a user that has liked or is liked by other users
+-Adding the 2 properties to the AppUser which will be changed to "UserLike" with regards to many to many relationship.
+-Creating a new entity to store our likes, called "UserLike" which will be the joining table between the AppUser and the AppUser
+-Go to DataContext file and add the DbSet UserLike to the file. Also override the OnModelCreating method from the DbContext that we extending and follow the code inside the DataContext with regards to the modelBuilder.
+-Once this modelBuilder for both Many to Many is done, now we can create a new Migration and Update the database
+-172.Adding an Interface likes repository. and Also a LikeDto since we dont want to return the AppUser, but only the neccessary properties
+-Once done add a Likes Repository and we gonna derive from ILikesRepository, make sure to add Interface and repo to ApplicationServiceExtensions
+173.Implementing the likes repository. Please follow all the code in the likesRepository that handles many to many relationship with joining table likedUsers
+-174.Controller methods for the likes feature. Look at all the code implemented for the likesController.
+-175. Setting up the likes functions in the Angular App. Go to the membersService and add thr addLike method in the service

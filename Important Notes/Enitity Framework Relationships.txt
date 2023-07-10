@@ -1,3 +1,7 @@
 -Theres a Relationship between AppUser and Photos. Each App User or User has MANY Photos.
 One To Many Relationship.
 Photots will be in its own seperate table.
+
+-AppUser can be liked by many AppUser.
+-AppUser can like many AppUser.
+-We will have a joining table

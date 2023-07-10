@@ -23,12 +23,7 @@ namespace DatingAppApi.Entities
         public string City { get; set; } = String.Empty;
         public string Country { get; set; } = String.Empty;
         public List<Photo> Photos { get; set; } = new List<Photo>(); // User can have many photos
-
-        // Comment this out because the projectTo AutoMapping doesnt work well in the UserRepository when there is a method inside the entity that we want to map from
-        // So add this as using .ForMember inside the AutoMapperProfiles class
-        //public int GetAge() // Always Create an Extension Class for the Method in an entity
-        //{
-        //    return DateOfBirth.CalculateAge();
-        //}
+        public List<UserLike> LikedByUsers { get; set; } // Who has liked the current user loggedIn. Many to Many relationship.
+        public List<UserLike> LikedUsers { get; set; } // All the users the current User has Liked. Many to Many relationship
     }
 }

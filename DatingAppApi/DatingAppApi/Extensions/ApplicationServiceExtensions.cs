@@ -26,6 +26,7 @@ namespace DatingAppApi.Extensions
             services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings")); // The name in the GetSection must match exactly the configurationKey that was added in the appSettings.json file
             services.AddScoped<IPhotoService, PhotoService>();
             services.AddScoped<LogUserActivity>();
+            services.AddScoped<ILikesRepository, LikesRepository>();
 
             return services;
         }

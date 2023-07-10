@@ -48,7 +48,7 @@ namespace DatingAppApi.Data
                 _ => query.OrderByDescending(u => u.LastActive)// Specify just the default which is the "lastActive"
             };
 
-            // This CreateAsync method is inside 
+            // This CreateAsync method is inside
             return await PagedList<MemberDto>.CreateAsync(query.AsNoTracking().ProjectTo<MemberDto>(_mapper.ConfigurationProvider), userParams.PageNumber, userParams.PageSize);
         }
 
