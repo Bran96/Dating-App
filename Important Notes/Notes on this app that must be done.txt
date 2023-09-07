@@ -13,7 +13,8 @@ WE WANT TO SAVE OUR PROGRESS TO VERSION CONTROL OR SOURCE CONTROL:
 -Go back to see the changes, you'll see that the changes are less now
 -We also dont want the appsettings.json file to be included in the commits so right click and add to .gitignore file
 
-MAKE THE FRONTEND RUN ON HTTPS INSTEAD OF JUST SO IT AN BE THE SAME AS THE BACKEND RUNNING ON HTTPS
+SECTION 3 - BUILDING A WALKING SKELETON PART TWO - ANGULAR
+(THIS IS OLD WILL BE REMOVED NOV 2023. USE THE FOLLOWING INSTRUCTIONS ON THIS NOTEPAD)MAKE THE FRONTEND RUN ON HTTPS INSTEAD OF JUST SO IT AN BE THE SAME AS THE BACKEND RUNNING ON HTTPS
 -Go to the studentassets folder->generateTrustedSSL
 -Click on server and do all the steps.
 -Create a ssl folder in the client app
@@ -25,6 +26,32 @@ MAKE THE FRONTEND RUN ON HTTPS INSTEAD OF JUST SO IT AN BE THE SAME AS THE BACKE
           },
 -Restart the application and rerun ng serve -o
 -Go to the lock next to the url and check the certicate
+
+(RATHER USE THIS. WE WANT TO RUN OUR ANGULAR APPLICATION OVER HTTPS AND NOT HTTP FOR DEVELOPMENT AS WELL AND THAT IS HOW THE APPLICATION IS GONNA BE PUBLISHED)
+- We need a certificate for our client side application by generating a certificate and we cannot use a dotnet self signed certificate for this.
+-We need to install "mkcert" to our computer. Search the name and go to the github link on google: https://github.com/FiloSottile/mkcert
+-Read the readme file and look at the installation process
+-Create a directory inside the client folder for ssl and call it "ssl_new" since we already have that old ssl folder for the previous certificate that will no longer work after november 2023.
+-And we need to run the command, first of all, to install a root local certificate authority into our computer
+-Download and install chocolatey in adminstrator cmd and follow the instruction to install it on your local machine using admin powershell: https://chocolatey.org/install
+-run choco --version
+-Once its installed on the computer
+-Now install mkcert on windows powershel admin: "choco install mkcert"
+-run mkcert --version
+-Create a directory in the client folder of the frontend and call it "ssl"
+-In vs code navigate to the ssl folder and run the following command: mkcert --install
+-Now it must be installed
+-Run the following command: "mkcert localhost". It will then give you details on when it will expire
+-We can run "mkcert localhost" anytime to get a new certificate
+-Now go to angular.json file and tell to run over ssl:
+-Go to angular.json file and under serve add the following object-> "options": {
+            "sslCert": "./ssl/localhost.pem",
+            "sslKey": "./ssl/localhost-key.pem",
+            "ssl": true
+          },
+
+
+
 
 WHEN CREATING SERVICES IN THE API IT'S IMPORTANT TO CREATE INTERFACES AND IMPLEMENTATION/SERVICE CLASS AT THE SAME TIME AND DEFINE THEM ASS BUILDER.SERVICE.ADDSCOPE(...) in the program.cs class - Section 4 video 41.
 
@@ -118,6 +145,7 @@ SECTION 9:
 -Never have hardcoded urls in the services files.
 -Go to the environments folder and this is where we put in environment variables.
 -If we run ur application in production mode, we gonna use environment.prod.ts file and if we're not then we in environment.ts file(Its for Development). Put in the ApiUrl in this file
+-113.Adding a photo Gallery (Angular 16+). So the one we will be using is called "Ng-gallery". Go to getting started and copy the npm command and install in angulart project
 
 SECTION 10:
 -Adding a Can Deactivate route guard to ask the user do they really want to go to another page if they have unsaved changes. In order to do that we need to consider 
@@ -258,3 +286,39 @@ SECTION 14. ADDING THE LIKE USER FEATURE
 173.Implementing the likes repository. Please follow all the code in the likesRepository that handles many to many relationship with joining table likedUsers
 -174.Controller methods for the likes feature. Look at all the code implemented for the likesController.
 -175. Setting up the likes functions in the Angular App. Go to the membersService and add thr addLike method in the service
+
+SECTION 15. ADDING THE MESSAGING FEATURE
+-181. Setting up the entities for messaging.
+-We gonna have to implement many to many relationship, since a user can send many messages and a user can receive many messages
+-182. Setting up the Message Repository.
+-Include everything that is needed for the Interface and the repository
+-183. Setting up the AutoMapper profiles.
+-Create a new MessageDto. Follow the code in there and then create a map from Message.cs to MessageDto.cs
+-Once that is done, we alos want to receive thhe message from the client and for that we gonna create another dto. Call it CreateMessageDto and follow the code inside. We dont need an automapper profile to go from the CreateMessageDto to the Message, because we literally got 2 properties 
+-184. Adding a message Controller. This is to create a controller to send a message to another user from the user thats currently logged in.
+-185. Getting the messages from the Repo.
+-We gonna focus on getMessagesForUser method in the messageRepository.
+-We gonna treat this like an unread message, inbox and outbox and we gonna use one of these 3 as a parametter to see which container of messages the user wants to view. so we gonna give them the option of those 3 to choose from or to view.
+-In order to do that we have to create pagination parameters and make sure we return it as a pagedList and what we'll also take in, is which container their interested in viewing
+-Go to helpers folder in the API. create a new c# class called MessageParams and add the code in there. And since we added the MessageParams in there add it ass a parameter in the getMessagesForUser method in the repo.
+-Now write the code to fetch the messages from the different containers in the getMessagesForUser methodin the MessageRepository.
+-Now in the MessagesController create a new HttpGet method and dd the code
+-Go to postman and remeber to make use of QueryStrings because we use FromQuery in the controller as a part of our paramater else the api call in postman wouldnt work
+-186.Getting the message thread for 2 users.
+-The main goal is to get the message thread between users. In the Messages Tab we gonna have the unread, inbox and outbox messages
+-Now we going to create te repository and then the controller, creating a new endpoint. Test it on postman.
+-187. Setting up the Angular app for messaging. We returning a messageDto for the thread so copy the one of the MessageDto objects from postman and then go to json2ts site and paste it in there so it can be converted.
+-Create a new class in typescript called message.ts. It will contain the messageDto's properties that we returning in the backend for the controller of thread
+-Now we will create a new services for our messages, but we will need the getPaginatedResult and the getPaginationHeaders from the memberService that we used in there. Since we need to make use of those 2 private methods in the messageService as well, well have to cut those 2 methods out of the membersService file and put them into a helper file that can be accessible from any service class.
+-Inisde the Services folder, create a new file called paginationHelper.ts that will contain both those 2 private methods. Change those 2 methods to "export function" so we have access to them in our service. and make sure to change the member service and the Message Service accordingly to those exported function from the paginationHelper class
+-Go to the message Component and start doing the code and test in on the frontend
+-188.Designing the inbox.This will be happening in the navbar at the top under "messages tab". Added coding in the messages.component.html and messages.component.ts and messages.component.css
+-192.Adding the message thread in the client. Here we going to get the message thread between 2 users.
+-Create a services call in message.service.ts to get the thread - getMessageThread() function in services class.
+-Create a new component inide the members folder: "member-messages"
+-This member-messages component is gonna be a child of the member-detail component so we can pass the username from the parent down to the child
+-
+
+
+
+
